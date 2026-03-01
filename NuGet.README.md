@@ -35,6 +35,8 @@ The following NuGet packages are the currently supported.
     * [MassTransit.WebJobs.ServiceBus](https://nuget.org/packages/MassTransit.WebJobs.ServiceBus/)
     * [MassTransit.WebJobs.EventHubs](https://nuget.org/packages/MassTransit.WebJobs.EventHubs/)
 * [MassTransit.RabbitMQ](https://nuget.org/packages/MassTransit.RabbitMQ/)
+* [MassTransit.SqlTransport.PostgreSQL](https://nuget.org/packages/MassTransit.SqlTransport.PostgreSQL/)
+* [MassTransit.SqlTransport.SqlServer](https://nuget.org/packages/MassTransit.SqlTransport.SqlServer/)
 * **Riders**
     * [MassTransit.EventHub](https://nuget.org/packages/MassTransit.EventHub/)
     * [MassTransit.Kafka](https://nuget.org/packages/MassTransit.Kafka/)
@@ -64,6 +66,7 @@ The following NuGet packages are the currently supported.
 ### Interoperability
 
 * [MassTransit.Interop.NServiceBus](https://nuget.org/packages/MassTransit.Interop.NServiceBus/)
+* [MassTransit.MessagePack](https://nuget.org/packages/MassTransit.MessagePack/)
 * [MassTransit.Newtonsoft](https://nuget.org/packages/MassTransit.Newtonsoft/)
 
 ### Other

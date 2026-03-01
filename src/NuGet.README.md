@@ -2,10 +2,10 @@
 
 MassTransit provides a developer-focused, modern platform for creating distributed applications without complexity.
 
-   - First class testing support
-   - Write once, then deploy using RabbitMQ, Azure Service Bus, and Amazon SQS
-   - Observability via Open Telemetry (OTEL)
-   - Fully-supported, widely-adopted, a complete end-to-end solution
+- First class testing support
+- Write once, then deploy using RabbitMQ, Azure Service Bus, and Amazon SQS
+- Observability via Open Telemetry (OTEL)
+- Fully-supported, widely-adopted, a complete end-to-end solution
 
 ## Documentation
 
@@ -35,12 +35,15 @@ The following NuGet packages are the currently supported.
     * [MassTransit.WebJobs.ServiceBus](https://nuget.org/packages/MassTransit.WebJobs.ServiceBus/)
     * [MassTransit.WebJobs.EventHubs](https://nuget.org/packages/MassTransit.WebJobs.EventHubs/)
 * [MassTransit.RabbitMQ](https://nuget.org/packages/MassTransit.RabbitMQ/)
+* [MassTransit.SqlTransport.PostgreSQL](https://nuget.org/packages/MassTransit.SqlTransport.PostgreSQL/)
+* [MassTransit.SqlTransport.SqlServer](https://nuget.org/packages/MassTransit.SqlTransport.SqlServer/)
 * **Riders**
     * [MassTransit.EventHub](https://nuget.org/packages/MassTransit.EventHub/)
     * [MassTransit.Kafka](https://nuget.org/packages/MassTransit.Kafka/)
 
 ### Saga Persistence
 
+* [MassTransit.AmazonS3](https://nuget.org/packages/MassTransit.AmazonS3/)
 * [MassTransit.Azure.Cosmos](https://nuget.org/packages/MassTransit.Azure.Cosmos/)
 * [MassTransit.Azure.Cosmos.Table](https://nuget.org/packages/MassTransit.Azure.Cosmos.Table/)
 * [MassTransit.DapperIntegration](https://nuget.org/packages/MassTransit.DapperIntegration/)
@@ -63,6 +66,7 @@ The following NuGet packages are the currently supported.
 ### Interoperability
 
 * [MassTransit.Interop.NServiceBus](https://nuget.org/packages/MassTransit.Interop.NServiceBus/)
+* [MassTransit.MessagePack](https://nuget.org/packages/MassTransit.MessagePack/)
 * [MassTransit.Newtonsoft](https://nuget.org/packages/MassTransit.Newtonsoft/)
 
 ### Other
@@ -110,7 +114,7 @@ The following packages from earlier versions of MassTransit are no longer suppor
 * MassTransit.StructureMapSigned
 * MassTransit.Unity
 
-## Discord 
+## Discord
 
 Get help live at the MassTransit Discord server.
 
@@ -118,6 +122,7 @@ Get help live at the MassTransit Discord server.
 
 ## GitHub Issues
 
-> Please do not open an issue on GitHub, unless you have spotted an actual bug in MassTransit. 
+> Please do not open an issue on GitHub, unless you have spotted an actual bug in MassTransit.
 
-Use [GitHub Discussions](https://github.com/MassTransit/MassTransit/discussions) to ask questions, bring up ideas, or other general items. Issues are not the place for questions, and will either be converted to a discussion or closed.
+Use [GitHub Discussions](https://github.com/MassTransit/MassTransit/discussions) to ask questions, bring up ideas, or other general items. Issues are not the
+place for questions, and will either be converted to a discussion or closed.
