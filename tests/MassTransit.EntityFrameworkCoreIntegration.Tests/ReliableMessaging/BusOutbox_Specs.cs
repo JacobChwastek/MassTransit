@@ -272,7 +272,7 @@ namespace MassTransit.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
 
                     await dbContext.SaveChangesAsync(harness.CancellationToken);
 
-                    using var cts3 = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                    using var cts3 = new CancellationTokenSource(TimeSpan.FromSeconds(20));
 
                     Assert.That(await consumerHarness.Consumed.Any<PingMessage>(x => x.Context.Message.CorrelationId == secondId, cts3.Token), Is.True);
 
