@@ -2,6 +2,7 @@ namespace MassTransit.MongoDbIntegration.Tests.Audit
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using MassTransit.Audit;
     using MongoDB.Driver;

@@ -1,5 +1,6 @@
 namespace MassTransit.Tests
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using MassTransit.Testing;
     using Microsoft.Extensions.DependencyInjection;

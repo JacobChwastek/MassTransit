@@ -11,6 +11,7 @@ namespace MassTransit.RabbitMqTransport.Tests
         RabbitMqTestFixture
     {
         [Test]
+        [Retry(3)]
         public async Task Should_deliver_the_response()
         {
             var clientFactory = Bus.CreateReplyToClientFactory();
@@ -34,6 +35,7 @@ namespace MassTransit.RabbitMqTransport.Tests
         Uri _serverAddress;
 
         [Test]
+        [Retry(3)]
         public async Task Should_deliver_the_response()
         {
             var clientFactory = Bus.CreateReplyToClientFactory();

@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace MassTransit.Azure.ServiceBus.Core.Tests
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Internals;
 
