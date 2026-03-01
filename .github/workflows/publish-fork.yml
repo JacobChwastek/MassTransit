@@ -1,0 +1,56 @@
+name: Publish Fork NuGet Packages
+
+env:
+  MASSTRANSIT_VERSION: 8.5.8
+  DOTNET_VERSION: "10.0.x"
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "MassTransit.sln"
+      - "Directory.Build.props"
+      - "Directory.Packages.props"
+      - "**/publish-fork.yml"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Build & Publish to GitHub Packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Calculate version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.ref }}" = 'refs/heads/master' ]; then
+            echo "version=${MASSTRANSIT_VERSION}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${MASSTRANSIT_VERSION}-develop.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build
+        run: dotnet build -c Release -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Pack
+        run: dotnet pack --no-build -c Release -p:PackageVersion=${{ steps.version.outputs.version }} -o ./artifacts
+
+      - name: Add GitHub Packages source
+        run: dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name github --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+
+      - name: Push to GitHub Packages
+        run: dotnet nuget push "artifacts/*.nupkg" --source github --skip-duplicate

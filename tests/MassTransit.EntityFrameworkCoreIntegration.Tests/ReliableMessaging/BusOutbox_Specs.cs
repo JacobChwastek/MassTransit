@@ -254,21 +254,27 @@ namespace MassTransit.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
 
                     var activity = TraceConfig.Source.StartActivity(ActivityKind.Client);
 
-                    await publishEndpoint.Publish(new PingMessage());
+                    var firstId = NewId.NextGuid();
+                    await publishEndpoint.Publish(new PingMessage(firstId));
 
                     using var cts1 = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-                    Assert.That(await consumerHarness.Consumed.Any<PingMessage>(cts1.Token), Is.False);
+                    Assert.That(await consumerHarness.Consumed.Any<PingMessage>(x => x.Context.Message.CorrelationId == firstId, cts1.Token), Is.False);
 
                     await dbContext.SaveChangesAsync(harness.CancellationToken);
 
-                    await publishEndpoint.Publish(new PingMessage());
+                    var secondId = NewId.NextGuid();
+                    await publishEndpoint.Publish(new PingMessage(secondId));
 
                     using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-                    Assert.That(await consumerHarness.Consumed.Any<PingMessage>(cts2.Token), Is.True);
+                    Assert.That(await consumerHarness.Consumed.Any<PingMessage>(x => x.Context.Message.CorrelationId == firstId, cts2.Token), Is.True);
 
                     await dbContext.SaveChangesAsync(harness.CancellationToken);
+
+                    using var cts3 = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+                    Assert.That(await consumerHarness.Consumed.Any<PingMessage>(x => x.Context.Message.CorrelationId == secondId, cts3.Token), Is.True);
 
                     activity.Stop();
                 }

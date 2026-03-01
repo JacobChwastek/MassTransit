@@ -43,7 +43,6 @@ MassTransit NuGet Packages
 | [MassTransit.Dapper][Dapper.nuget]                              | 8.0, 9.0 |      2.0      |     4.7.2      |
 | [MassTransit.DynamoDb][DynamoDb.nuget]                          | 8.0, 9.0 |      2.0      |     4.7.2      |
 | [MassTransit.EntityFrameworkCore][EFCore.nuget]                 | 8.0, 9.0 |               |                |
-| [MassTransit.EntityFramework][EF.nuget]                         |          |      2.1      |     4.7.2      |     
 | [MassTransit.Marten][Marten.nuget]                              | 8.0, 9.0 |               |                |
 | [MassTransit.MongoDb][MongoDb.nuget]                            | 8.0, 9.0 |      2.1      |     4.7.2      |
 | [MassTransit.NHibernate][NHibernate.nuget]                      | 8.0, 9.0 |      2.0      |     4.7.2      |
@@ -123,7 +122,6 @@ Logo Design by _The Agile Badger_
 [Dapper.nuget]: https://www.nuget.org/packages/MassTransit.DapperIntegration
 [DynamoDb.nuget]: https://www.nuget.org/packages/MassTransit.DynamoDb
 [EFCore.nuget]: https://www.nuget.org/packages/MassTransit.EntityFrameworkCore
-[EF.nuget]: https://www.nuget.org/packages/MassTransit.EntityFramework
 [Marten.nuget]: https://www.nuget.org/packages/MassTransit.Marten
 [MongoDb.nuget]: https://www.nuget.org/packages/MassTransit.MongoDb
 [NHibernate.nuget]: https://www.nuget.org/packages/MassTransit.NHibernate

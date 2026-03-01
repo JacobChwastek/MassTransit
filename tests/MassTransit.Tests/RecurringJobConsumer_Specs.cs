@@ -1,6 +1,7 @@
 namespace MassTransit.Tests;
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.JobService;
 using MassTransit.Testing;
