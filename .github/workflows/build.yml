@@ -129,9 +129,20 @@ jobs:
       - name: Wait for LocalStack
         shell: bash
         run: |
-          for _ in {1..60}; do
-            health="$(curl -fsS http://localhost:4566/_localstack/health || true)"
-            if echo "$health" | grep -q '"sqs"[[:space:]]*:[[:space:]]*"running"'; then
+          for _ in {1..90}; do
+            health="$(
+              curl -kfsS https://localhost:4566/_localstack/health 2>/dev/null ||
+              curl -fsS http://localhost:4566/_localstack/health 2>/dev/null ||
+              curl -kfsS https://localhost:4566/health 2>/dev/null ||
+              curl -fsS http://localhost:4566/health 2>/dev/null ||
+              true
+            )"
+
+            if echo "$health" | grep -Eq '"sqs"[[:space:]]*:[[:space:]]*"(running|available|enabled)"'; then
+              exit 0
+            fi
+
+            if echo "$health" | grep -Eq '"ready"[[:space:]]*:[[:space:]]*true'; then
               exit 0
             fi
 
