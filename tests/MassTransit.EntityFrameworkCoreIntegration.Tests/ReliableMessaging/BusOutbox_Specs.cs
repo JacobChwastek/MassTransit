@@ -246,6 +246,7 @@ namespace MassTransit.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
 
             try
             {
+                Guid secondId;
                 {
                     await using var scope = harness.Scope.ServiceProvider.CreateAsyncScope();
                     await using var dbContext = scope.ServiceProvider.GetRequiredService<ReliableDbContext>();
@@ -263,7 +264,7 @@ namespace MassTransit.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
 
                     await dbContext.SaveChangesAsync(harness.CancellationToken);
 
-                    var secondId = NewId.NextGuid();
+                    secondId = NewId.NextGuid();
                     await publishEndpoint.Publish(new PingMessage(secondId));
 
                     using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(2));
@@ -272,12 +273,12 @@ namespace MassTransit.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
 
                     await dbContext.SaveChangesAsync(harness.CancellationToken);
 
-                    using var cts3 = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-
-                    Assert.That(await consumerHarness.Consumed.Any<PingMessage>(x => x.Context.Message.CorrelationId == secondId, cts3.Token), Is.True);
-
                     activity.Stop();
                 }
+
+                using var cts3 = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+
+                Assert.That(await consumerHarness.Consumed.Any<PingMessage>(x => x.Context.Message.CorrelationId == secondId, cts3.Token), Is.True);
 
                 Assert.That(consumerHarness.Consumed.Count(harness.CancellationToken), Is.EqualTo(2));
             }

@@ -121,14 +121,38 @@ jobs:
         ports:
           - "4566:4566"
           - "4571:4571"
-        options: >-
-          --health-cmd "curl --fail http://localhost:4566/health || exit 1"
-          --health-interval 10s --health-timeout 5s --health-retries 5 --health-start-period 15s
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Wait for LocalStack
+        shell: bash
+        run: |
+          for _ in {1..90}; do
+            health="$(
+              curl -kfsS https://localhost:4566/_localstack/health 2>/dev/null ||
+              curl -fsS http://localhost:4566/_localstack/health 2>/dev/null ||
+              curl -kfsS https://localhost:4566/health 2>/dev/null ||
+              curl -fsS http://localhost:4566/health 2>/dev/null ||
+              true
+            )"
+
+            if echo "$health" | grep -Eq '"sqs"[[:space:]]*:[[:space:]]*"(running|available|enabled)"'; then
+              exit 0
+            fi
+
+            if echo "$health" | grep -Eq '"ready"[[:space:]]*:[[:space:]]*true'; then
+              exit 0
+            fi
+
+            sleep 2
+          done
+
+          echo "LocalStack did not become ready in time."
+          docker ps -a
+          docker logs ${{ job.services.localstack.id }} || true
+          exit 1
       - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
         working-directory: tests/MassTransit.AmazonSqsTransport.Tests
 

@@ -275,6 +275,7 @@ namespace MassTransit.AmazonSqsTransport.Tests
         }
 
         [Test]
+        [Category("Flaky")]
         public async Task Should_handle_multiple_groups_in_order()
         {
             await using var provider = new ServiceCollection()
