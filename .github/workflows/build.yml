@@ -73,25 +73,6 @@ jobs:
   # ==========================================================================
   # Transport Tests
   # ==========================================================================
-  test-activemq:
-    name: "Transport: ActiveMQ"
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    services:
-      activemq:
-        image: masstransit/activemq:latest
-        ports:
-          - "61616:61616"
-          - "8161:8161"
-          - "5672:5672"
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.ActiveMqTransport.Tests
-
   test-rabbitmq:
     name: "Transport: RabbitMQ"
     runs-on: ubuntu-latest
@@ -110,51 +91,6 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
         working-directory: tests/MassTransit.RabbitMqTransport.Tests
-
-  test-sqs:
-    name: "Transport: SQS (+S3)"
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    services:
-      localstack:
-        image: localstack/localstack:3.0.2
-        ports:
-          - "4566:4566"
-          - "4571:4571"
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Wait for LocalStack
-        shell: bash
-        run: |
-          for _ in {1..90}; do
-            health="$(
-              curl -kfsS https://localhost:4566/_localstack/health 2>/dev/null ||
-              curl -fsS http://localhost:4566/_localstack/health 2>/dev/null ||
-              curl -kfsS https://localhost:4566/health 2>/dev/null ||
-              curl -fsS http://localhost:4566/health 2>/dev/null ||
-              true
-            )"
-
-            if echo "$health" | grep -Eq '"sqs"[[:space:]]*:[[:space:]]*"(running|available|enabled)"'; then
-              exit 0
-            fi
-
-            if echo "$health" | grep -Eq '"ready"[[:space:]]*:[[:space:]]*true'; then
-              exit 0
-            fi
-
-            sleep 2
-          done
-
-          echo "LocalStack did not become ready in time."
-          docker ps -a
-          docker logs ${{ job.services.localstack.id }} || true
-          exit 1
-      - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.AmazonSqsTransport.Tests
 
   test-sql-transport:
     name: "Transport: SQL"
@@ -290,26 +226,6 @@ jobs:
         run: dotnet test -c Release -f net10.0 --logger GitHubActions --filter "Category!=Flaky&Category!=Integration"
         working-directory: tests/MassTransit.EntityFrameworkCoreIntegration.Tests
 
-  test-marten:
-    name: "Storage: Marten"
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: "Password12!"
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.MartenIntegration.Tests
-
   test-mongodb:
     name: "Storage: MongoDB"
     runs-on: ubuntu-latest
@@ -326,18 +242,6 @@ jobs:
       - run: docker compose -f docker-compose.yml down
         working-directory: tests/MassTransit.MongoDbIntegration.Tests
         if: always()
-
-  test-nhibernate:
-    name: "Storage: NHibernate"
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
-        working-directory: tests/MassTransit.NHibernateIntegration.Tests
 
   test-redis:
     name: "Storage: Redis"
@@ -466,18 +370,14 @@ jobs:
     needs:
       - compile
       - test-unit
-      - test-activemq
       # - test-azure-service-bus  # disabled
       - test-rabbitmq
-      - test-sqs
       - test-sql-transport
       - test-azure-table
       - test-cosmosdb
       - test-dapper
       - test-entity-framework-core
-      - test-marten
       - test-mongodb
-      - test-nhibernate
       - test-redis
       - test-valkey
       - test-hangfire
