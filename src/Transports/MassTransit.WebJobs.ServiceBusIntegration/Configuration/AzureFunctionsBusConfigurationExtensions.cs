@@ -4,11 +4,12 @@ namespace MassTransit
     using Azure.Identity;
     using Azure.Messaging.ServiceBus;
     using AzureServiceBusTransport;
-    using Microsoft.ApplicationInsights.DependencyCollector;
+    using Logging;
     using Microsoft.Azure.WebJobs.ServiceBus;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
+    using OpenTelemetry.Resources;
 
 
     public static class AzureFunctionsBusConfigurationExtensions
@@ -31,7 +32,7 @@ namespace MassTransit
             string connectionStringConfigurationKey = "ServiceBus",
             Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configureBus = default)
         {
-            ConfigureApplicationInsights(services);
+            ConfigureOpenTelemetry(services);
 
             services
                 .AddSingleton<IMessageReceiver, MessageReceiver>()
@@ -81,7 +82,7 @@ namespace MassTransit
 
         static bool IsMissingCredentials(string connectionString)
         {
-            if (!connectionString.Contains("=")) return true;
+            if (!connectionString.Contains('=')) return true;
 
             var properties = ServiceBusConnectionStringProperties.Parse(connectionString);
 
@@ -89,12 +90,11 @@ namespace MassTransit
                 && string.IsNullOrWhiteSpace(properties.SharedAccessSignature);
         }
 
-        static void ConfigureApplicationInsights(IServiceCollection services)
+        static void ConfigureOpenTelemetry(IServiceCollection services)
         {
-            services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>
-            {
-                module.IncludeDiagnosticSourceActivities.Add("MassTransit");
-            });
+            services.AddOpenTelemetry()
+                .ConfigureResource(r => r.AddService("MassTransit"))
+                .WithTracing(builder => builder.AddSource(DiagnosticHeaders.DefaultListenerName));
         }
     }
 }
