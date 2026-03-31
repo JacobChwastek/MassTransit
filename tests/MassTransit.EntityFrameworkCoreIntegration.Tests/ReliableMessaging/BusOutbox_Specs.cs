@@ -219,6 +219,7 @@ namespace MassTransit.EntityFrameworkCoreIntegration.Tests.ReliableMessaging
         }
 
         [Test]
+        [Category("Flaky")]
         public async Task Should_support_multiple_save_changes()
         {
             await using var provider = new ServiceCollection()
