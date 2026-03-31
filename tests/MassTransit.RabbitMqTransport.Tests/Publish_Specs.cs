@@ -309,7 +309,7 @@
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(consumeContext.SourceAddress, Is.EqualTo(new Uri("rabbitmq://localhost/test/input_queue")));
+                    Assert.That(consumeContext.SourceAddress.AbsolutePath, Does.EndWith("/test/input_queue"));
 
                     Assert.That(consumeContext.ReceiveContext.TransportHeaders.Get(MessageHeaders.MessageId, "N/A"),
                         Is.EqualTo(consumeContext.MessageId.ToString()));

@@ -21,7 +21,7 @@ public class Using_the_direct_reply_to_request_client
             .AddMassTransitTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.SetKebabCaseEndpointNameFormatter();
 

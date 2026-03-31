@@ -12,14 +12,14 @@
         [Explicit]
         public async Task Should_properly_fail_on_exclusive_launch()
         {
-            var harness1 = new RabbitMqTestHarness();
+            var harness1 = RabbitMqTestSetUpFixture.CreateHarness();
             harness1.OnConfigureRabbitMqBus += configurator =>
             {
                 configurator.OverrideDefaultBusEndpointQueueName("exclusively-yours");
                 configurator.Exclusive = true;
             };
 
-            var harness2 = new RabbitMqTestHarness();
+            var harness2 = RabbitMqTestSetUpFixture.CreateHarness();
             harness2.OnConfigureRabbitMqBus += configurator =>
             {
                 configurator.OverrideDefaultBusEndpointQueueName("exclusively-yours");

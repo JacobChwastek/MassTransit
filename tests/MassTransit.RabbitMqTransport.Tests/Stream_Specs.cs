@@ -14,7 +14,7 @@ public class Consuming_messages_from_a_stream
     public async Task Should_process_messages()
     {
         await using var provider = new ServiceCollection()
-            .Configure<RabbitMqTransportOptions>(options => options.VHost = "test")
+            .Configure<RabbitMqTransportOptions>(RabbitMqTestSetUpFixture.ConfigureTransportOptions)
             .ConfigureRabbitMqTestOptions(options =>
             {
                 options.CreateVirtualHostIfNotExists = true;

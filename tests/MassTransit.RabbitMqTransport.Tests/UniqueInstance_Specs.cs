@@ -3,8 +3,6 @@ namespace MassTransit.RabbitMqTransport.Tests
     using System.Threading.Tasks;
     using MassTransit.Configuration;
     using NUnit.Framework;
-    using Testing;
-
 
     [TestFixture]
     public class Specifying_a_unique_instance_for_an_endpoint
@@ -12,7 +10,7 @@ namespace MassTransit.RabbitMqTransport.Tests
         [Test]
         public async Task Should_fan_out_published_messages()
         {
-            var firstHarness = new RabbitMqTestHarness();
+            var firstHarness = RabbitMqTestSetUpFixture.CreateHarness();
             var firstConsumer = new EventConsumer(firstHarness.GetTask<ConsumeContext<SomeEvent>>());
             firstHarness.OnConfigureRabbitMqBus += configurator =>
             {
@@ -28,7 +26,7 @@ namespace MassTransit.RabbitMqTransport.Tests
             await firstHarness.Start();
             try
             {
-                var secondHarness = new RabbitMqTestHarness();
+                var secondHarness = RabbitMqTestSetUpFixture.CreateHarness();
                 var secondConsumer = new EventConsumer(secondHarness.GetTask<ConsumeContext<SomeEvent>>());
                 secondHarness.OnConfigureRabbitMqBus += configurator =>
                 {

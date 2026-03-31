@@ -24,7 +24,7 @@ namespace MassTransit.RabbitMqTransport.Tests
                 .AddMassTransitTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                     x.AddDelayedMessageScheduler();
 

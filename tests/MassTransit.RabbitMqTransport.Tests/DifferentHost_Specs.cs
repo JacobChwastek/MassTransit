@@ -12,9 +12,13 @@ namespace MassTransit.RabbitMqTransport.Tests
         [Test]
         public async Task Should_be_able_to_respond()
         {
+            var hostAddress = RabbitMqTestSetUpFixture.HostAddress;
+            var host = hostAddress.Host;
+            var port = (ushort)hostAddress.Port;
+
             var bus = Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("localhost", "test", h =>
+                x.Host(host, port, "test", h =>
                 {
                 });
 
@@ -31,7 +35,7 @@ namespace MassTransit.RabbitMqTransport.Tests
 
             var clientBus = Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                x.Host("127.0.0.1", "test", h =>
+                x.Host(host, port, "test", h =>
                 {
                 });
 
@@ -45,7 +49,7 @@ namespace MassTransit.RabbitMqTransport.Tests
 
                 try
                 {
-                    IRequestClient<PingMessage> requestClient = clientBus.CreateRequestClient<PingMessage>(new Uri("rabbitmq://127.0.0.1/test/input_queue"));
+                    IRequestClient<PingMessage> requestClient = clientBus.CreateRequestClient<PingMessage>(new Uri($"rabbitmq://{host}:{port}/test/input_queue"));
 
                     Response<PongMessage> response = await requestClient.GetResponse<PongMessage>(new PingMessage());
                 }

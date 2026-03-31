@@ -23,7 +23,7 @@ public class When_configuring_a_durable_ttl_queue
             .AddMassTransitTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
