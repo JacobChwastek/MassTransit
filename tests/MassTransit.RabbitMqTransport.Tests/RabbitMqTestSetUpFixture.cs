@@ -16,6 +16,8 @@ using Testcontainers.RabbitMq;
 [SetUpFixture]
 public class RabbitMqTestSetUpFixture
 {
+    const string ImageName = "masstransit-rabbitmq-test";
+
     static RabbitMqContainer _container;
     static IFutureDockerImage _image;
 
@@ -27,18 +29,9 @@ public class RabbitMqTestSetUpFixture
     [OneTimeSetUp]
     public async Task Before_any()
     {
-        var dockerfileDir = FindDockerfileDirectory();
+        var imageName = await EnsureImageExists();
 
-        _image = new ImageFromDockerfileBuilder()
-            .WithDockerfileDirectory(dockerfileDir)
-            .WithDockerfile("Dockerfile.rabbitmq")
-            .WithName("masstransit-rabbitmq-test")
-            .WithCleanUp(false)
-            .Build();
-
-        await _image.CreateAsync();
-
-        _container = new RabbitMqBuilder(_image.FullName)
+        _container = new RabbitMqBuilder(imageName)
             .WithUsername("guest")
             .WithPassword("guest")
             .WithPortBinding(15672, true)
@@ -87,6 +80,27 @@ public class RabbitMqTestSetUpFixture
             await _container.DisposeAsync();
     }
 
+    static async Task<string> EnsureImageExists()
+    {
+        // In CI the image is pre-built via docker build step; locally we build it here
+        var dockerfileDir = FindDockerfileDirectory();
+        if (dockerfileDir == null)
+        {
+            // Dockerfile not found — assume image was pre-built (CI)
+            return ImageName;
+        }
+
+        _image = new ImageFromDockerfileBuilder()
+            .WithDockerfileDirectory(dockerfileDir)
+            .WithDockerfile("Dockerfile.rabbitmq")
+            .WithName(ImageName)
+            .WithCleanUp(false)
+            .Build();
+
+        await _image.CreateAsync();
+        return _image.FullName;
+    }
+
     static string FindDockerfileDirectory()
     {
         var dir = AppContext.BaseDirectory;
@@ -97,7 +111,7 @@ public class RabbitMqTestSetUpFixture
             dir = System.IO.Path.GetDirectoryName(dir);
         }
 
-        throw new InvalidOperationException("Could not find directory containing Dockerfile.rabbitmq");
+        return null;
     }
 
     async Task CreateVirtualHost(string host, int managementPort)

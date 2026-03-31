@@ -82,6 +82,8 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - run: docker build -t masstransit-rabbitmq-test -f Dockerfile.rabbitmq .
+        working-directory: tests/MassTransit.RabbitMqTransport.Tests
       - run: dotnet test -c Release --logger GitHubActions --filter Category!=Flaky
         working-directory: tests/MassTransit.RabbitMqTransport.Tests
 
