@@ -45,6 +45,7 @@
 
         public string Username { get; set; }
         public string Password { get; set; }
+        public int ManagementPort { get; set; } = 15672;
         public bool CleanVirtualHost { get; set; } = true;
         public override string InputQueueName { get; }
         public string NodeHostName { get; set; }
@@ -125,7 +126,7 @@
             var byteArray = Encoding.ASCII.GetBytes($"{Username}:{Password}");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
-            var requestUri = new UriBuilder("http", HostAddress.Host, 15672, $"api/{element}/{HostAddress.AbsolutePath.Trim('/')}").Uri;
+            var requestUri = new UriBuilder("http", HostAddress.Host, ManagementPort, $"api/{element}/{HostAddress.AbsolutePath.Trim('/')}").Uri;
 
             var bytes = await client.GetByteArrayAsync(requestUri);
 

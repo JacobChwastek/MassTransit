@@ -25,7 +25,8 @@
             {
                 using var token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
 
-                using var secondHarness = new RabbitMqTestHarness { CleanVirtualHost = false };
+                using var secondHarness = RabbitMqTestSetUpFixture.CreateHarness();
+                secondHarness.CleanVirtualHost = false;
                 secondHarness.OnConfigureRabbitMqBus += configurator =>
                 {
                     ConfigureBusDiagnostics(configurator);

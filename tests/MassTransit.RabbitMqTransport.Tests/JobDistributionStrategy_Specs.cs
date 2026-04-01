@@ -56,7 +56,7 @@ public class JobDistributionStrategy_Specs
             .AddMassTransitTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(10));
 
@@ -74,7 +74,7 @@ public class JobDistributionStrategy_Specs
             .AddMassTransit<IEastRegionBus>(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>(nameof(IEastRegionBus))
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.AddConsumer<RegionalJobConsumer>(c =>
                 {
@@ -92,7 +92,7 @@ public class JobDistributionStrategy_Specs
             .AddMassTransit<IWestRegionBus>(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>(nameof(IWestRegionBus))
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.AddConsumer<RegionalJobConsumer>(c =>
                 {

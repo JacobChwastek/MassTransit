@@ -26,7 +26,11 @@ namespace MassTransit.RabbitMqTransport.Tests
                     x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
 
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test2");
+                        .Configure(options =>
+                        {
+                            RabbitMqTestSetUpFixture.ConfigureTransportOptions(options);
+                            options.VHost = "test2";
+                        });
                 })
                 .BuildServiceProvider(true);
 

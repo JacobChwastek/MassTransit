@@ -27,6 +27,7 @@
         }
 
         [Test]
+        [Category("Flaky")]
         public async Task Should_fill_them_even_fuller()
         {
             var settings = new TestCacheSettings(100, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(60));

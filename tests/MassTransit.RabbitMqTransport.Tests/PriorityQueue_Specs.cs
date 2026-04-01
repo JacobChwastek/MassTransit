@@ -72,7 +72,7 @@
                 .AddMassTransitTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                     x.AddInMemoryInboxOutbox();
 

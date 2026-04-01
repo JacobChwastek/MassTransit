@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-MassTransit supports the current major version only. If issues or vulnerabilities are encountered with previous versions for which there is no workaround, upgrading to the latest version if recommended.
+This fork supports the current major version only.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,4 +11,6 @@ MassTransit supports the current major version only. If issues or vulnerabilitie
 
 ## Reporting a Vulnerability
 
-Vulnerabilities can be reported by submitting an issue.
+Vulnerabilities can be reported by [opening an issue](https://github.com/JacobChwastek/MassTransit/issues).
+
+For vulnerabilities in the upstream MassTransit project, please report directly to [MassTransit/MassTransit](https://github.com/MassTransit/MassTransit/issues).

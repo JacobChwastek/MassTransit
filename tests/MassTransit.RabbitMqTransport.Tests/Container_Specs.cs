@@ -51,6 +51,9 @@ namespace MassTransit.RabbitMqTransport.Tests
                 {
                     x.AddConsumer<TestingHarnessSubmitOrderConsumer>();
 
+                    x.AddOptions<RabbitMqTransportOptions>()
+                        .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
+
                     x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
                 })
                 .BuildServiceProvider(true);
@@ -100,7 +103,7 @@ namespace MassTransit.RabbitMqTransport.Tests
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
-                        cfg.Host("localhost", h =>
+                        cfg.Host(RabbitMqTestSetUpFixture.HostAddress, h =>
                         {
                             h.Username("totally-bogus");
                             h.Password("not-real-at-all");

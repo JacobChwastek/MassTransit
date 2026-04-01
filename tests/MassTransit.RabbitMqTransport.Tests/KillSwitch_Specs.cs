@@ -27,7 +27,7 @@ public class Using_the_kill_switch_with_rabbitmq
                 x.AddConsumer<MessageConsumer>();
 
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(10));
 

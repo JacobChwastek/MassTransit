@@ -25,6 +25,11 @@
         {
             RabbitMqTestHarness = harness;
 
+            RabbitMqTestHarness.HostAddress = RabbitMqTestSetUpFixture.HostAddress;
+            RabbitMqTestHarness.Username = RabbitMqTestSetUpFixture.Username;
+            RabbitMqTestHarness.Password = RabbitMqTestSetUpFixture.Password;
+            RabbitMqTestHarness.ManagementPort = RabbitMqTestSetUpFixture.ManagementPort;
+
             if (logicalHostAddress != null)
             {
                 RabbitMqTestHarness.NodeHostName = RabbitMqTestHarness.HostAddress.Host;

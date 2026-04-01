@@ -26,7 +26,7 @@
                 .AddMassTransitTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                     x.AddInMemoryInboxOutbox();
 
@@ -118,9 +118,8 @@
             {
                 Assert.That(Bus.Topology.TryGetPublishAddress<TheWorldImploded>(out var address));
 
-                Assert.That(address,
-                    Is.EqualTo(new Uri(
-                        "rabbitmq://localhost/test/MassTransit.RabbitMqTransport.Tests:AlternateExchange_Specs-TheWorldImploded?alternateexchange=publish-not-delivered")));
+                Assert.That(address.AbsolutePath, Does.EndWith("/test/MassTransit.RabbitMqTransport.Tests:AlternateExchange_Specs-TheWorldImploded"));
+                Assert.That(address.Query, Is.EqualTo("?alternateexchange=publish-not-delivered"));
             });
         }
 

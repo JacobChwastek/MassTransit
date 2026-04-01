@@ -69,7 +69,7 @@ namespace MassTransit.RabbitMqTransport.Tests
                     x.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                     x.SetKebabCaseEndpointNameFormatter();
 
@@ -418,7 +418,7 @@ namespace MassTransit.RabbitMqTransport.Tests
                 .AddMassTransitTestHarness(x =>
                 {
                     x.AddOptions<RabbitMqTransportOptions>()
-                        .Configure(options => options.VHost = "test");
+                        .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                     x.SetTestTimeouts(testInactivityTimeout: TimeSpan.FromSeconds(10));
                     x.SetKebabCaseEndpointNameFormatter();

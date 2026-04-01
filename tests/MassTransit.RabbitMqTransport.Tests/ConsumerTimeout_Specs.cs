@@ -23,7 +23,7 @@ public class When_the_consumer_timeout_is_reached_waiting_for_a_batch
             .AddMassTransitTestHarness(x =>
             {
                 x.AddOptions<RabbitMqTransportOptions>()
-                    .Configure(options => options.VHost = "test");
+                    .Configure(RabbitMqTestSetUpFixture.ConfigureTransportOptions);
 
                 x.AddOptions<MassTransitHostOptions>().Configure(options =>
                 {
